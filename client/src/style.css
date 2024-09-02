@@ -1,0 +1,69 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+@import url('https://fonts.googleapis.com/css2?family=Comfortaa:wght@300..700&display=swap');
+
+
+body {
+  font-size: 18px;
+  color: #ffffff;
+  font-family: "Comfortaa", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+}
+
+*,
+*:before,
+*:after {
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  scroll-behavior: smooth;
+}
+
+.nav-btn {
+  @apply w-max my-[8px] hover:text-acaccent
+}
+
+.nav-btn_active {
+  @apply text-acaccent
+}
+
+.character-card {
+  @apply w-[225px] h-[300px] border-2 rounded-md overflow-hidden mt-[24px] ml-[24px] flex flex-col items-center justify-between text-[16px] relative
+}
+
+.character-card_active {
+  @apply border-acaccent
+}
+
+.character-card_disabled {
+  @apply border-grey-backgroud bg-opacity7-backgroud
+}
+
+.character-card_disabled .art {
+  opacity: 0.8;
+}
+
+.diamond {
+  @apply w-[14px] inline mb-[2px]
+}
+
+.nav-right-scroll::-webkit-scrollbar {
+  width: 0px;
+}
+
+.none {
+  display: none !important;
+}
+
+.bg-image {
+  background-image: url('/menu.png');
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position-y: -30px;
+}
+
+.nav-right-width {
+  width: calc(100% - 126.22px);
+}

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Platformer</title>
+  </head>
+  <body>
+    <div id="app">
+      <div
+        class="bg-body-backgroud w-screen h-screen flex items-center justify-center"
+      >
+        <div
+          class="bg-image w-[80%] h-[80%] flex rounded-md drop-shadow-lg overflow-hidden"
+        >
+          <div
+            class="w-max h-full flex flex-col items-start justify-center bg-opacity7-backgroud p-[16px]"
+          >
+            <div class="my-[8px]" title="баланс">
+              <img class="diamond" src="/diamond.svg" alt="" />
+              <span id="global-money" class="text-gold-color">0</span>
+            </div>
+            <button class="nav-btn" id="play">Играть</button>
+            <button class="nav-btn" id="characters">Персонажи</button>
+            <button class="nav-btn">Инфо</button>
+            <button class="nav-btn">Настройки</button>
+            <button class="nav-btn">Донат</button>
+          </div>
+          <div class="nav-right-width h-full" id="dashboard"></div>
+        </div>
+      </div>
+    </div>
+    <script type="module" src="/src/main.ts" defer></script>
+  </body>
+</html>
