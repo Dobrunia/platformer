@@ -49,6 +49,25 @@ body {
   @apply w-[14px] inline mb-[2px]
 }
 
+.level {
+  @apply w-[64px] h-[64px] bg-grey-backgroud flex items-center justify-center rounded-md m-[16px] cursor-pointer hover:bg-acaccent
+}
+
+.level-wrapper {
+  @apply w-full h-full overflow-hidden relative
+}
+
+.level-container {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  /* background-size: 100% 100%; */
+  background-position-x: left;
+  background-position-y: bottom;
+  min-width: 100%;
+  min-height: 100%;
+}
+
 .nav-right-scroll::-webkit-scrollbar {
   width: 0px;
 }

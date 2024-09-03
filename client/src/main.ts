@@ -1,41 +1,60 @@
-import { Cards } from './components/cards';
 import './style.css';
+import { ReturnWindow } from './components/menuWindows';
+import { returnPlayground } from './components/playground';
 import * as levelsArray from './state/levels.json';
-import { Elements } from './components/elements';
 
-const dashboard = document.getElementById('dashboard');
+function startLevel(levelNumber) {
+  const playground = document.getElementById('playground');
+  // localStorage.setItem('currentLevel', levelNumber);
+  // localStorage.getItem('test')
 
-document.getElementById('play').addEventListener('click', (e) => {
-  e.stopPropagation();
-  renderLevels();
-});
-
-document.getElementById('characters').addEventListener('click', (e) => {
-  e.stopPropagation();
-  dfdfdf();
-});
-
-function renderLevels() {
-  let content = '';
-  levelsArray.default.forEach((level) => {
-    content += Elements.getLevel(level.id);
-  });
-  dashboard.innerHTML = `
-  <div class="nav-right-scroll w-full h-full bg-opacity9-backgroud flex flex-row flex-wrap items-center justify-center overflow-y-scroll">
-    ${content}
-  </div>`;
+  playground.innerHTML = returnPlayground(
+    levelsArray.default.map((level) => {
+      return level.levelNumber === parseInt(levelNumber, 10) ? level : null;
+    }),
+  );
 }
 
-function dfdfdf() {
-  let content = Cards.getActiveCard();
-  content += Cards.getPurchasedCard();
-  content += Cards.getDisabledCard();
-  dashboard.innerHTML = `
-    <div
-                  class="nav-right-scroll w-full h-full bg-opacity9-backgroud flex flex-row flex-wrap items-center justify-center overflow-y-scroll"
-                >
-                ${content}
-                  <!-- TODO:: при клике модально окно со статами  -->
-                </div>
-    `;
-}
+document.addEventListener('DOMContentLoaded', () => {
+  const dashboard = document.getElementById('dashboard');
+  const playButton = document.getElementById('play');
+  const charactersButton = document.getElementById('characters');
+
+  const playButtonHandler = (e) => {
+    e.stopPropagation();
+    dashboard.innerHTML = ReturnWindow.levels();
+    const levels = [...document.getElementsByClassName('level')];
+    levels.forEach((level) => {
+      level.addEventListener('click', () =>
+        startLevel(level.getAttribute('data-levelNumber')),
+      );
+    });
+  };
+
+  const charactersButtonHandler = (e) => {
+    e.stopPropagation();
+    dashboard.innerHTML = ReturnWindow.characters();
+  };
+
+  if (playButton) {
+    playButton.addEventListener('click', playButtonHandler);
+  }
+  if (charactersButton) {
+    charactersButton.addEventListener('click', charactersButtonHandler);
+  }
+
+  //   const removeEventListeners = () => {
+  //     if (playButton) {
+  //       playButton.removeEventListener('click', playButtonHandler);
+  //     }
+
+  //     if (charactersButton) {
+  //       charactersButton.removeEventListener('click', charactersButtonHandler);
+  //     }
+  //   };
+
+  //   setTimeout(() => {
+  //     removeEventListeners();
+  //     console.log('Обработчики событий удалены');
+  //   }, 10000);
+});
