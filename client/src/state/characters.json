@@ -1,0 +1,22 @@
+[
+    {
+        "name": "Luminia",
+        "attack": {
+            "type": "range",
+            "damage": 20,
+            "range": 200,
+            "cooldown": 1,
+            "duration": 2,
+            "speed": 200
+            
+        },
+        "health": 3,
+        "movespeed": 100,
+        "dash": {
+            "cooldown": 2
+        },
+        "img": {
+            "default": "default.png"
+        }
+    }
+]

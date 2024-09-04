@@ -5,14 +5,12 @@ import * as levelsArray from './state/levels.json';
 
 function startLevel(levelNumber) {
   const playground = document.getElementById('playground');
-  // localStorage.setItem('currentLevel', levelNumber);
-  // localStorage.getItem('test')
-
   playground.innerHTML = returnPlayground(
     levelsArray.default.map((level) => {
       return level.levelNumber === parseInt(levelNumber, 10) ? level : null;
     }),
   );
+  //отслеживание кнопок
 }
 
 document.addEventListener('DOMContentLoaded', () => {

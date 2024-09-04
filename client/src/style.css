@@ -68,6 +68,18 @@ body {
   min-height: 100%;
 }
 
+.element-wrapper {
+  @apply absolute bg-grey-backgroud
+}
+
+.element-img {
+
+}
+
+.character {
+  @apply w-[75px] h-[100px] absolute bg-cover
+}
+
 .nav-right-scroll::-webkit-scrollbar {
   width: 0px;
 }

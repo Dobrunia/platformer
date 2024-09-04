@@ -3,17 +3,14 @@
     "levelNumber": 1,
     "name": "Первая страница",
     "difficulty": 1,
-    "width": 4800,
-    "height": 4800,
+    "width": 1000,
+    "height": 1000,
     "background": "1.webp",
-    "tiles": [
-      { "x": 0, "y": 550, "type": "ground" },
-      { "x": 50, "y": 550, "type": "ground" },
-      { "x": 100, "y": 500, "type": "platform" },
-      { "x": 150, "y": 450, "type": "platform" },
-      { "x": 200, "y": 550, "type": "ground" }
+    "elements": [
+      { "width": 1000, "height": 40, "x": 0, "y": 0, "type": "ground" },
+      { "width": 200, "height": 40, "x": 1100, "y": 100, "type": "platform" }
     ],
-    "playerStart": { "x": 100, "y": 500 },
+    "playerStart": { "x": 100, "y": 40 },
     "enemies": [
       { "x": 300, "y": 550, "type": "enemy1" },
       { "x": 400, "y": 550, "type": "enemy2" }
