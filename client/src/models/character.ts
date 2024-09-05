@@ -48,4 +48,8 @@ export default class Character {
     public get position() {
         return this._position;
     }
+
+    public get status() {
+        return this._status;
+    }
 }

@@ -4,30 +4,41 @@ import * as levelsArray from './state/levels.json';
 import * as characters from './state/characters.json';
 import { Component } from './components/components';
 
+const currentCharId = 1;
+
 function startLevel(levelNumber) {
+  const levelsMap = generateMap(levelsArray.default);
+  const currentLevel = levelsMap.get(parseInt(levelNumber, 10));
   const playground = document.getElementById('playground');
-  const levelJson = levelsArray.default.map((level) => {
-    return level.levelNumber === parseInt(levelNumber, 10) ? level : null;
-  });
-  playground.innerHTML = Component.playground(levelJson);
+  playground.innerHTML = Component.playground(currentLevel);
+  const charMap = generateMap(characters.default);
+  const currentChar = charMap.get(parseInt(currentCharId, 10))
+  const char = new Character(currentChar, currentLevel.playerStart.x, currentLevel.playerStart.y)
   const charElem = document.getElementById('character');
-  localStorage.setItem('currentCharacter', 'Luminia');
-  const charJson = characters.default.map((char) => {
-    return char.name === localStorage.getItem('currentCharacter') ? char : null;
-  });
-  const char = new Character(charJson[0], levelJson[0].playerStart.x, levelJson[0].playerStart.y)
-  charElem.style.backgroundImage = `url(/characters/${char.name}/${char.img.idle})`;
   charElem.style.left = `${char.position.x}px`;
   charElem.style.bottom = `${char.position.y}px`;
-
+  let lifeTimer = null;
   const lifeCycle = () => {
-    let lifeTimer = setInterval(() => {
-      if(char) {
-        
-      }
+    lifeTimer = setInterval(() => {
+      switch (char.status) {
+        case 'idle':
+          console.log(char.status)
+          charElem.style.backgroundImage = `url(/characters/${char.name}/${char.img.idle})`;
+          break;
+        case 'dead':
+          clearInterval(lifeTimer);
+          break;
+        }
     }, 150)
   }
-  
+  // lifeCycle();
+}
+function generateMap(array: Array<object>) {
+  const arrayMap = new Map();
+  array.forEach(el => {
+    arrayMap.set(el.id, el);
+  });
+  return arrayMap;
 }
 
 document.addEventListener('DOMContentLoaded', () => {
