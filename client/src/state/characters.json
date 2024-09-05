@@ -16,7 +16,7 @@
             "cooldown": 2
         },
         "img": {
-            "default": "default.png"
+            "idle": "idle.png"
         }
     }
 ]
