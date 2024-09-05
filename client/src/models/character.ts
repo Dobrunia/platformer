@@ -10,7 +10,8 @@ export default class Character {
         duration: number;
         speed: number;
     };
-    private _health: number;
+    private _maxHealth: number;
+    private _currentHealth: number;
     private _movespeed: number;
     private _dash: {
         cooldown: number;
@@ -26,7 +27,8 @@ export default class Character {
     constructor(charJson, startXpos: number, startYpos: number) {
         this._name = charJson.name;
         this._attack = charJson.attack;
-        this._health = charJson.health;
+        this._maxHealth = charJson.health;
+        this._currentHealth = this._maxHealth;
         this._movespeed = charJson.movespeed;
         this._dash = charJson.dash;
         this._img = charJson.img;
@@ -36,19 +38,18 @@ export default class Character {
         };
         this._status = "idle";
     }
-
     public get name() {
         return this._name;
     }
-
+    public get currentHealth() {
+        return this._currentHealth;
+    }
     public get img() {
         return this._img;
     }
-
     public get position() {
         return this._position;
     }
-
     public get status() {
         return this._status;
     }

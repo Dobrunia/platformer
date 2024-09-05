@@ -72,12 +72,16 @@ body {
   @apply absolute bg-grey-backgroud
 }
 
-.element-img {
-
-}
-
 .character {
   @apply w-[75px] h-[100px] absolute bg-cover
+}
+
+.interface {
+  @apply w-full h-[40px] absolute bottom-0
+}
+
+.hearts {
+  @apply w-max h-full flex justify-start items-center gap-[10px] ml-[20px]
 }
 
 .nav-right-scroll::-webkit-scrollbar {

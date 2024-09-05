@@ -15,6 +15,10 @@ function startLevel(levelNumber) {
   const currentChar = charMap.get(parseInt(currentCharId, 10))
   const char = new Character(currentChar, currentLevel.playerStart.x, currentLevel.playerStart.y)
   const charElem = document.getElementById('character');
+  const hearts = document.getElementById('hearts');
+  for (let i = 0; i < char.currentHealth; i++) {
+    hearts.innerHTML += `<img src="/heart.svg" alt=""/>`;
+  }
   charElem.style.left = `${char.position.x}px`;
   charElem.style.bottom = `${char.position.y}px`;
   let lifeTimer = null;

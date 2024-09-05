@@ -99,7 +99,15 @@ function playground(level) {
           ${levelElements(level)}
           ${character()}
           </div>
+          ${interfaceFooter()}
       </div>`;
+}
+function interfaceFooter() {
+    return `
+    <div class="interface">
+        <div class="hearts" id="hearts"></div>
+    </div>
+    `;
 }
 //<img class="element-img" src="/${element.image}" alt="">
 
