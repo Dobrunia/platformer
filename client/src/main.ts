@@ -1,3 +1,4 @@
+import { characterStatus } from './types/types';
 import './style.css';
 import Character from './models/character';
 import * as levelsArray from './state/levels.json';
@@ -15,10 +16,8 @@ function startLevel(levelNumber) {
   const currentChar = charMap.get(parseInt(currentCharId, 10))
   const char = new Character(currentChar, currentLevel.playerStart.x, currentLevel.playerStart.y)
   const charElem = document.getElementById('character');
-  const hearts = document.getElementById('hearts');
-  for (let i = 0; i < char.currentHealth; i++) {
-    hearts.innerHTML += `<img src="/heart.svg" alt=""/>`;
-  }
+  renderCurrentHealth(char);
+  playerTakesDamage(char);
   charElem.style.left = `${char.position.x}px`;
   charElem.style.bottom = `${char.position.y}px`;
   let lifeTimer = null;
@@ -36,6 +35,23 @@ function startLevel(levelNumber) {
     }, 150)
   }
   // lifeCycle();
+}
+function playerTakesDamage(char) {
+  char.takeDamage();
+  renderCurrentHealth(char);
+  if (char.status === 'dead') {
+    alert('Вы погибли');
+  }
+}
+function renderCurrentHealth(char: Character) {
+  const hearts = document.getElementById('hearts');
+  hearts.innerHTML = '';
+  for (let i = 0; i < char.currentHealth; i++) {
+    hearts.innerHTML += `<img src="/heart.svg" alt=""/>`;
+  }
+  for (let i = 0; i < (char.maxHealth - char.currentHealth); i++) {
+    hearts.innerHTML += `<img src="/empty-heart.svg" alt=""/>`;
+  }
 }
 function generateMap(array: Array<object>) {
   const arrayMap = new Map();

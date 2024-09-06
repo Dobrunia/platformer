@@ -41,6 +41,9 @@ export default class Character {
     public get name() {
         return this._name;
     }
+    public get maxHealth() {
+        return this._maxHealth;
+    }
     public get currentHealth() {
         return this._currentHealth;
     }
@@ -52,5 +55,11 @@ export default class Character {
     }
     public get status() {
         return this._status;
+    }
+    public takeDamage() {
+        this._currentHealth -= 1;
+        if (!this._currentHealth) {
+            this._status = "dead";
+        }
     }
 }
