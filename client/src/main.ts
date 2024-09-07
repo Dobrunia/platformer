@@ -13,28 +13,122 @@ function startLevel(levelNumber) {
   const playground = document.getElementById('playground');
   playground.innerHTML = Component.playground(currentLevel);
   const charMap = generateMap(characters.default);
-  const currentChar = charMap.get(parseInt(currentCharId, 10))
-  const char = new Character(currentChar, currentLevel.playerStart.x, currentLevel.playerStart.y)
-  const charElem = document.getElementById('character');
-  renderCurrentHealth(char);
-  playerTakesDamage(char);
+  const currentChar = charMap.get(parseInt(currentCharId, 10));
+  const char = new Character(
+    currentChar,
+    currentLevel.playerStart.x,
+    currentLevel.playerStart.y,
+  );
+  function gameLoop() {
+    const charElem = document.getElementById('character');
+
+    if (isMovingLeft) {
+      char.moveLeft();
+    }
+
+    if (isMovingRight) {
+      char.moveRight();
+    }
+
+    if (!isMovingLeft && !isMovingRight && char.status !== 'idle') {
+      char.stop();
+    }
+
+    // Рендерим текущую позицию персонажа и его здоровье
+    renderCharacterPosition(char, charElem);
+    renderCurrentHealth(char);
+
+    // Проверяем статус для переключения анимации
+    switch (char.status) {
+      case 'idle':
+        charElem.style.backgroundImage = `url(/characters/${char.name}/${char.img.idle})`;
+        break;
+      case 'running':
+        //charElem.style.backgroundImage = `url(/characters/${char.name}/${char.img.running})`;
+        break;
+      case 'falling':
+        //charElem.style.backgroundImage = `url(/characters/${char.name}/${char.img.jumping})`;
+        break;
+      case 'dead':
+        // Можно добавить логику при смерти
+        break;
+      default:
+        break;
+    }
+  }
+  // Инициализация
+  let isMovingLeft = false;
+  let isMovingRight = false;
+  let isJumping = false;
+  function addPlayerListeners(char) {
+    document.addEventListener('keydown', (event) => {
+      event.preventDefault();
+      switch (event.code) {
+        case 'KeyA':
+          isMovingLeft = true;
+          break;
+        case 'KeyD':
+          isMovingRight = true;
+          break;
+        case 'Space':
+          if (!isJumping) {
+            isJumping = true;
+          }
+          break;
+        default:
+          break;
+      }
+      requestAnimationFrame(gameLoop);
+    });
+    document.addEventListener('keyup', (event) => {
+      switch (event.code) {
+        case 'KeyA':
+          isMovingLeft = false;
+          break;
+        case 'KeyD':
+          isMovingRight = false;
+          break;
+        case 'Space':
+          isJumping = false;
+          break;
+        default:
+          break;
+      }
+
+      if (!isMovingLeft && !isMovingRight) {
+        char.stop();
+      }
+      requestAnimationFrame(gameLoop);
+    });
+  }
+  addPlayerListeners(char);
+  // let lifeTimer = null;
+  // const lifeCycle = () => {
+  //   addPlayerListeners(char);
+  //   lifeTimer = setInterval(() => {
+  //     const charElem = document.getElementById('character');
+  //     switch (char.status) {
+  //       case 'idle':
+  //         console.log(char.status);
+  //         charElem.style.backgroundImage = `url(/characters/${char.name}/${char.img.idle})`;
+  //         break;
+  //       case 'running':
+  //         console.log(char.status);
+
+  //         break;
+  //       case 'dead':
+  //         clearInterval(lifeTimer);
+  //         break;
+  //     }
+  //     renderCharacterPosition(char, charElem);
+  //     renderCurrentHealth(char);
+  //   }, 150);
+  // };
+  // lifeCycle();
+}
+function renderCharacterPosition(char, charElem) {
   charElem.style.left = `${char.position.x}px`;
   charElem.style.bottom = `${char.position.y}px`;
-  let lifeTimer = null;
-  const lifeCycle = () => {
-    lifeTimer = setInterval(() => {
-      switch (char.status) {
-        case 'idle':
-          console.log(char.status)
-          charElem.style.backgroundImage = `url(/characters/${char.name}/${char.img.idle})`;
-          break;
-        case 'dead':
-          clearInterval(lifeTimer);
-          break;
-        }
-    }, 150)
-  }
-  // lifeCycle();
 }
 function playerTakesDamage(char) {
   char.takeDamage();
@@ -49,13 +143,13 @@ function renderCurrentHealth(char: Character) {
   for (let i = 0; i < char.currentHealth; i++) {
     hearts.innerHTML += `<img src="/heart.svg" alt=""/>`;
   }
-  for (let i = 0; i < (char.maxHealth - char.currentHealth); i++) {
+  for (let i = 0; i < char.maxHealth - char.currentHealth; i++) {
     hearts.innerHTML += `<img src="/empty-heart.svg" alt=""/>`;
   }
 }
 function generateMap(array: Array<object>) {
   const arrayMap = new Map();
-  array.forEach(el => {
+  array.forEach((el) => {
     arrayMap.set(el.id, el);
   });
   return arrayMap;

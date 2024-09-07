@@ -13,6 +13,7 @@ export default class Character {
     private _maxHealth: number;
     private _currentHealth: number;
     private _movespeed: number;
+    private _jumpPower: number;
     private _dash: {
         cooldown: number;
     };
@@ -30,6 +31,7 @@ export default class Character {
         this._maxHealth = charJson.health;
         this._currentHealth = this._maxHealth;
         this._movespeed = charJson.movespeed;
+        this._jumpPower = 200;
         this._dash = charJson.dash;
         this._img = charJson.img;
         this._position = {
@@ -61,5 +63,21 @@ export default class Character {
         if (!this._currentHealth) {
             this._status = "dead";
         }
+    }
+    public moveLeft() {
+        this._position.x -= this._movespeed;
+        this._status = "running";
+    }
+    public moveRight() {
+        this._position.x += this._movespeed;
+        this._status = "running";
+    }
+    public jump() {
+        if (true) {
+            this._position.y += this._jumpPower;
+        }
+    }
+    public stop() {
+        this._status = "idle";
     }
 }

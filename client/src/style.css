@@ -73,6 +73,7 @@ body {
 }
 
 .character {
+  transition: 0.150s;
   @apply w-[75px] h-[100px] absolute bg-cover
 }
 
