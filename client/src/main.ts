@@ -71,9 +71,11 @@ function gameLoop() {
   if (isJumping) {
     char.jump();
     isJumping = false;
+    char.onGround = false;
+  } else {
+    checkFalling();
   }
   char.applyGravity();
-  checkFalling();
   requestAnimationFrame(gameLoop);
 }
 function checkFalling() {
@@ -86,7 +88,7 @@ function checkFalling() {
   const centerX = rect.left + rect.width / 2;
   const centerY = rect.top + rect.height / 2;
   const elementBelow = document.elementFromPoint(centerX, centerY + 51);
-  if (centerY > (levelHeight + 200)) {
+  if (centerY > levelHeight + 200) {
     char.killCharacter();
   }
   if (!elementBelow) {

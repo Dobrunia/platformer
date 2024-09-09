@@ -44,7 +44,7 @@ export default class Character {
     };
     this._status = 'idle';
     this._isOnGround = true;
-    this._gravity = 1.5;
+    this._gravity = 1;
   }
   public get name() {
     return this._name;
