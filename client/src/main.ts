@@ -60,6 +60,7 @@ function addPlayerListeners() {
   });
 }
 function gameLoop() {
+  renderCharInfo();
   if (!char.isAlive()) return;
   if (isMovingLeft) {
     char.moveLeft();
@@ -72,7 +73,6 @@ function gameLoop() {
     isJumping = false;
   }
   char.applyGravity();
-  renderCharInfo();
   checkFalling();
   requestAnimationFrame(gameLoop);
 }
