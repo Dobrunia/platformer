@@ -4,7 +4,7 @@ import * as levelsArray from './state/levels.json';
 import * as characters from './state/characters.json';
 import { Component } from './components/components';
 
-const currentCharId = 1;//потом поменять
+const currentCharId = 1; //потом поменять
 let char: Character;
 let isMovingLeft = false;
 let isMovingRight = false;
@@ -22,6 +22,7 @@ function startLevel(levelNumber) {
     currentLevel.playerStart.y,
   );
   addPlayerListeners();
+  requestAnimationFrame(gameLoop);
 }
 function addPlayerListeners() {
   document.addEventListener('keydown', (event) => {
@@ -41,7 +42,6 @@ function addPlayerListeners() {
       default:
         break;
     }
-    requestAnimationFrame(gameLoop);
   });
   document.addEventListener('keyup', (event) => {
     switch (event.code) {
@@ -57,7 +57,6 @@ function addPlayerListeners() {
       default:
         break;
     }
-    requestAnimationFrame(gameLoop);
   });
 }
 function gameLoop() {
@@ -71,8 +70,33 @@ function gameLoop() {
     char.jump();
   }
   renderCharInfo();
+  requestAnimationFrame(gameLoop);
+  checkFalling();
 }
-function checkFalling() {}
+function checkFalling() {
+  const charElem = document.getElementById('character');
+  let centerX;
+  let centerY;
+  if (charElem) {
+    const rect = charElem.getBoundingClientRect();
+    centerX = rect.left + rect.width / 2;
+    centerY = rect.top + rect.height / 2;
+    const elementBelow = document.elementFromPoint(centerX, centerY + 51);
+    if (elementBelow) {
+      const belowAttribute = elementBelow.getAttribute('data-type');
+      if (!belowAttribute) {
+        console.log('падаем');
+      }
+      if (belowAttribute === 'ground' || belowAttribute === 'platform') {
+        console.log('не падаем');
+      }
+    } else {
+      console.log('Элемент под персонажем не найден.');
+    }
+  } else {
+    console.log('Персонаж не найден.');
+  }
+}
 function playerTakesDamage() {
   char.takeDamage();
   if (char.status === 'dead') {

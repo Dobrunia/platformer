@@ -73,12 +73,12 @@ body {
 }
 
 .character {
-  transition: 0.150s;
+  /* transition: 0.150s; рывки появл лучше не трогать*/ 
   @apply w-[75px] h-[100px] absolute bg-cover
 }
 
 .interface {
-  @apply w-full h-[40px] absolute bottom-0
+  @apply w-full h-[38px] absolute bottom-0
 }
 
 .hearts {
