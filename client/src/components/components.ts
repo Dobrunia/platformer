@@ -86,7 +86,7 @@ function levelElements(level) {
   let elements = '';
   level.elements.forEach((element) => {
     elements += `
-          <div class="element-wrapper" style="left: ${element.x}px; bottom: ${element.y}px; width: ${element.width}px; height: ${element.height}px;"></div>`;
+          <div class="element-wrapper" data-type="${element.type}" style="left: ${element.x}px; bottom: ${element.y}px; width: ${element.width}px; height: ${element.height}px;"></div>`;
   });
   return elements;
 }

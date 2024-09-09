@@ -1,143 +1,95 @@
-import { characterStatus } from './types/types';
 import './style.css';
 import Character from './models/character';
 import * as levelsArray from './state/levels.json';
 import * as characters from './state/characters.json';
 import { Component } from './components/components';
 
-const currentCharId = 1;
-
+const currentCharId = 1;//потом поменять
+let char: Character;
+let isMovingLeft = false;
+let isMovingRight = false;
+let isJumping = false;
 function startLevel(levelNumber) {
   const levelsMap = generateMap(levelsArray.default);
   const currentLevel = levelsMap.get(parseInt(levelNumber, 10));
   const playground = document.getElementById('playground');
   playground.innerHTML = Component.playground(currentLevel);
   const charMap = generateMap(characters.default);
-  const currentChar = charMap.get(parseInt(currentCharId, 10));
-  const char = new Character(
+  const currentChar = charMap.get(currentCharId);
+  char = new Character(
     currentChar,
     currentLevel.playerStart.x,
     currentLevel.playerStart.y,
   );
-  function gameLoop() {
-    const charElem = document.getElementById('character');
-
-    if (isMovingLeft) {
-      char.moveLeft();
-    }
-
-    if (isMovingRight) {
-      char.moveRight();
-    }
-
-    if (!isMovingLeft && !isMovingRight && char.status !== 'idle') {
-      char.stop();
-    }
-
-    // Рендерим текущую позицию персонажа и его здоровье
-    renderCharacterPosition(char, charElem);
-    renderCurrentHealth(char);
-
-    // Проверяем статус для переключения анимации
-    switch (char.status) {
-      case 'idle':
-        charElem.style.backgroundImage = `url(/characters/${char.name}/${char.img.idle})`;
+  addPlayerListeners();
+}
+function addPlayerListeners() {
+  document.addEventListener('keydown', (event) => {
+    event.preventDefault();
+    switch (event.code) {
+      case 'KeyA':
+        isMovingLeft = true;
         break;
-      case 'running':
-        //charElem.style.backgroundImage = `url(/characters/${char.name}/${char.img.running})`;
+      case 'KeyD':
+        isMovingRight = true;
         break;
-      case 'falling':
-        //charElem.style.backgroundImage = `url(/characters/${char.name}/${char.img.jumping})`;
-        break;
-      case 'dead':
-        // Можно добавить логику при смерти
+      case 'Space':
+        if (!isJumping) {
+          isJumping = true;
+        }
         break;
       default:
         break;
     }
-  }
-  // Инициализация
-  let isMovingLeft = false;
-  let isMovingRight = false;
-  let isJumping = false;
-  function addPlayerListeners(char) {
-    document.addEventListener('keydown', (event) => {
-      event.preventDefault();
-      switch (event.code) {
-        case 'KeyA':
-          isMovingLeft = true;
-          break;
-        case 'KeyD':
-          isMovingRight = true;
-          break;
-        case 'Space':
-          if (!isJumping) {
-            isJumping = true;
-          }
-          break;
-        default:
-          break;
-      }
-      requestAnimationFrame(gameLoop);
-    });
-    document.addEventListener('keyup', (event) => {
-      switch (event.code) {
-        case 'KeyA':
-          isMovingLeft = false;
-          break;
-        case 'KeyD':
-          isMovingRight = false;
-          break;
-        case 'Space':
-          isJumping = false;
-          break;
-        default:
-          break;
-      }
-
-      if (!isMovingLeft && !isMovingRight) {
-        char.stop();
-      }
-      requestAnimationFrame(gameLoop);
-    });
-  }
-  addPlayerListeners(char);
-  // let lifeTimer = null;
-  // const lifeCycle = () => {
-  //   addPlayerListeners(char);
-  //   lifeTimer = setInterval(() => {
-  //     const charElem = document.getElementById('character');
-  //     switch (char.status) {
-  //       case 'idle':
-  //         console.log(char.status);
-  //         charElem.style.backgroundImage = `url(/characters/${char.name}/${char.img.idle})`;
-  //         break;
-  //       case 'running':
-  //         console.log(char.status);
-
-  //         break;
-  //       case 'dead':
-  //         clearInterval(lifeTimer);
-  //         break;
-  //     }
-  //     renderCharacterPosition(char, charElem);
-  //     renderCurrentHealth(char);
-  //   }, 150);
-  // };
-  // lifeCycle();
+    requestAnimationFrame(gameLoop);
+  });
+  document.addEventListener('keyup', (event) => {
+    switch (event.code) {
+      case 'KeyA':
+        isMovingLeft = false;
+        break;
+      case 'KeyD':
+        isMovingRight = false;
+        break;
+      case 'Space':
+        isJumping = false;
+        break;
+      default:
+        break;
+    }
+    requestAnimationFrame(gameLoop);
+  });
 }
-function renderCharacterPosition(char, charElem) {
-  charElem.style.left = `${char.position.x}px`;
-  charElem.style.bottom = `${char.position.y}px`;
+function gameLoop() {
+  if (isMovingLeft) {
+    char.moveLeft();
+  }
+  if (isMovingRight) {
+    char.moveRight();
+  }
+  if (isJumping) {
+    char.jump();
+  }
+  renderCharInfo();
 }
-function playerTakesDamage(char) {
+function checkFalling() {}
+function playerTakesDamage() {
   char.takeDamage();
-  renderCurrentHealth(char);
   if (char.status === 'dead') {
     alert('Вы погибли');
   }
 }
-function renderCurrentHealth(char: Character) {
+function renderCharInfo() {
+  setCharImg();
+  renderCharacterPosition();
+  renderCharCurrentHealth();
+}
+function renderCharacterPosition() {
+  const charElem = document.getElementById('character');
+  charElem.style.left = `${char.position.x}px`;
+  charElem.style.bottom = `${char.position.y}px`;
+}
+function renderCharCurrentHealth() {
   const hearts = document.getElementById('hearts');
   hearts.innerHTML = '';
   for (let i = 0; i < char.currentHealth; i++) {
@@ -145,6 +97,24 @@ function renderCurrentHealth(char: Character) {
   }
   for (let i = 0; i < char.maxHealth - char.currentHealth; i++) {
     hearts.innerHTML += `<img src="/empty-heart.svg" alt=""/>`;
+  }
+}
+function setCharImg() {
+  const charElem = document.getElementById('character');
+  switch (char.status) {
+    case 'idle':
+      charElem.style.backgroundImage = `url(/characters/${char.name}/${char.img.idle})`;
+      break;
+    case 'running':
+      //charElem.style.backgroundImage = `url(/characters/${char.name}/${char.img.running})`;
+      break;
+    case 'falling':
+      //charElem.style.backgroundImage = `url(/characters/${char.name}/${char.img.jumping})`;
+      break;
+    case 'dead':
+      break;
+    default:
+      break;
   }
 }
 function generateMap(array: Array<object>) {
@@ -159,7 +129,6 @@ document.addEventListener('DOMContentLoaded', () => {
   const dashboard = document.getElementById('dashboard');
   const playButton = document.getElementById('play');
   const charactersButton = document.getElementById('characters');
-
   const playButtonHandler = (e) => {
     e.stopPropagation();
     dashboard.innerHTML = Component.levels();
@@ -170,31 +139,14 @@ document.addEventListener('DOMContentLoaded', () => {
       );
     });
   };
-
   const charactersButtonHandler = (e) => {
     e.stopPropagation();
     dashboard.innerHTML = Component.characters();
   };
-
   if (playButton) {
     playButton.addEventListener('click', playButtonHandler);
   }
   if (charactersButton) {
     charactersButton.addEventListener('click', charactersButtonHandler);
   }
-
-  //   const removeEventListeners = () => {
-  //     if (playButton) {
-  //       playButton.removeEventListener('click', playButtonHandler);
-  //     }
-
-  //     if (charactersButton) {
-  //       charactersButton.removeEventListener('click', charactersButtonHandler);
-  //     }
-  //   };
-
-  //   setTimeout(() => {
-  //     removeEventListeners();
-  //     console.log('Обработчики событий удалены');
-  //   }, 10000);
 });
