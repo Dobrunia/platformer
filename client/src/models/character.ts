@@ -81,9 +81,7 @@ export default class Character {
     if (this._canJump) {
       this._position.y += this._jumpPower;
       this._canJump -= 1;
+      this._status = 'falling';
     }
-  }
-  public stop() {
-    this._status = 'idle';
   }
 }

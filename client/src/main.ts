@@ -69,6 +69,7 @@ function gameLoop() {
   if (isJumping) {
     char.jump();
   }
+  console.log(char.status);
   renderCharInfo();
   checkFalling();
   requestAnimationFrame(gameLoop);
@@ -96,7 +97,6 @@ function checkFalling() {
   }
   console.log('падаем');
 }
-
 function playerTakesDamage() {
   char.takeDamage();
   if (char.status === 'dead') {
