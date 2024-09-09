@@ -70,8 +70,8 @@ function gameLoop() {
     char.jump();
   }
   renderCharInfo();
-  requestAnimationFrame(gameLoop);
   checkFalling();
+  requestAnimationFrame(gameLoop);
 }
 function checkFalling() {
   const charElem = document.getElementById('character');
