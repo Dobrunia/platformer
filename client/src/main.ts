@@ -75,28 +75,27 @@ function gameLoop() {
 }
 function checkFalling() {
   const charElem = document.getElementById('character');
-  let centerX;
-  let centerY;
-  if (charElem) {
-    const rect = charElem.getBoundingClientRect();
-    centerX = rect.left + rect.width / 2;
-    centerY = rect.top + rect.height / 2;
-    const elementBelow = document.elementFromPoint(centerX, centerY + 51);
-    if (elementBelow) {
-      const belowAttribute = elementBelow.getAttribute('data-type');
-      if (!belowAttribute) {
-        console.log('падаем');
-      }
-      if (belowAttribute === 'ground' || belowAttribute === 'platform') {
-        console.log('не падаем');
-      }
-    } else {
-      console.log('Элемент под персонажем не найден.');
-    }
-  } else {
+  if (!charElem) {
     console.log('Персонаж не найден.');
+    return;
   }
+  const rect = charElem.getBoundingClientRect();
+  const centerX = rect.left + rect.width / 2;
+  const centerY = rect.top + rect.height / 2;
+  const elementBelow = document.elementFromPoint(centerX, centerY + 51);
+  if (!elementBelow) {
+    console.log('падаем');
+    console.log('Элемент под персонажем не найден.');
+    return;
+  }
+  const belowAttribute = elementBelow.getAttribute('data-type');
+  if (belowAttribute === 'ground' || belowAttribute === 'platform') {
+    console.log('не падаем');
+    return;
+  }
+  console.log('падаем');
 }
+
 function playerTakesDamage() {
   char.takeDamage();
   if (char.status === 'dead') {
