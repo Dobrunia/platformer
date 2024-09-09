@@ -91,6 +91,7 @@ function checkFalling() {
   const belowAttribute = elementBelow.getAttribute('data-type');
   if (belowAttribute === 'ground' || belowAttribute === 'platform') {
     console.log('не падаем');
+    char.canJump = 2;
     return;
   }
   console.log('падаем');

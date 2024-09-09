@@ -14,6 +14,7 @@ export default class Character {
   private _currentHealth: number;
   private _movespeed: number;
   private _jumpPower: number;
+  private _canJump: number;
   private _dash: {
     cooldown: number;
   };
@@ -32,6 +33,7 @@ export default class Character {
     this._currentHealth = this._maxHealth;
     this._movespeed = charJson.movespeed;
     this._jumpPower = 200;
+    this._canJump = 2;
     this._dash = charJson.dash;
     this._img = charJson.img;
     this._position = {
@@ -58,6 +60,9 @@ export default class Character {
   public get status() {
     return this._status;
   }
+  public set canJump(jumpsNumber: number) {
+    this._canJump = jumpsNumber;
+  }
   public takeDamage() {
     this._currentHealth -= 1;
     if (!this._currentHealth) {
@@ -73,12 +78,10 @@ export default class Character {
     this._status = 'running';
   }
   public jump() {
-    if (true) {
+    if (this._canJump) {
       this._position.y += this._jumpPower;
+      this._canJump -= 1;
     }
-  }
-  public falling() {
-    this.position.y -= fallSpeed;
   }
   public stop() {
     this._status = 'idle';
