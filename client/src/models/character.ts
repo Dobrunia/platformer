@@ -25,7 +25,9 @@ export default class Character {
     x: number;
     y: number;
   };
+  private _isOnGround: boolean;
   private _status: characterStatus;
+  private _gravity: number;
   constructor(charJson, startXpos: number, startYpos: number) {
     this._name = charJson.name;
     this._attack = charJson.attack;
@@ -41,6 +43,8 @@ export default class Character {
       y: startYpos,
     };
     this._status = 'idle';
+    this._isOnGround = true;
+    this._gravity = 1.5;
   }
   public get name() {
     return this._name;
@@ -60,28 +64,53 @@ export default class Character {
   public get status() {
     return this._status;
   }
-  public set canJump(jumpsNumber: number) {
-    this._canJump = jumpsNumber;
+  public set onGround(is: boolean) {
+    this._isOnGround = is;
   }
   public takeDamage() {
+    if (!this.isAlive()) return;
     this._currentHealth -= 1;
     if (!this._currentHealth) {
-      this._status = 'dead';
+      this.killCharacter();
     }
   }
   public moveLeft() {
+    if (!this.isAlive()) return;
     this._position.x -= this._movespeed;
     this._status = 'running';
   }
   public moveRight() {
+    if (!this.isAlive()) return;
     this._position.x += this._movespeed;
     this._status = 'running';
   }
   public jump() {
+    if (!this.isAlive()) return;
     if (this._canJump) {
       this._position.y += this._jumpPower;
       this._canJump -= 1;
       this._status = 'falling';
     }
+  }
+  public resetJump() {
+    this._canJump = 2;
+  }
+  public applyGravity() {
+    if (!this.isAlive()) return;
+    if (!this._isOnGround) {
+      this._position.y -= this._gravity;
+    }
+  }
+  public killCharacter() {
+    if (!this.isAlive()) return;
+    this._currentHealth = 0;
+    this._status = 'dead';
+  }
+  public isAlive(): boolean {
+    if (this._status === 'dead') {
+      console.log('персонаж мертв');
+      return false;
+    }
+    return true;
   }
 }

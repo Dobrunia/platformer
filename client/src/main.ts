@@ -9,6 +9,7 @@ let char: Character;
 let isMovingLeft = false;
 let isMovingRight = false;
 let isJumping = false;
+let levelHeight;
 function startLevel(levelNumber) {
   const levelsMap = generateMap(levelsArray.default);
   const currentLevel = levelsMap.get(parseInt(levelNumber, 10));
@@ -21,6 +22,7 @@ function startLevel(levelNumber) {
     currentLevel.playerStart.x,
     currentLevel.playerStart.y,
   );
+  levelHeight = currentLevel.height;
   addPlayerListeners();
   requestAnimationFrame(gameLoop);
 }
@@ -35,9 +37,7 @@ function addPlayerListeners() {
         isMovingRight = true;
         break;
       case 'Space':
-        if (!isJumping) {
-          isJumping = true;
-        }
+        isJumping = true;
         break;
       default:
         break;
@@ -60,6 +60,7 @@ function addPlayerListeners() {
   });
 }
 function gameLoop() {
+  if (!char.isAlive()) return;
   if (isMovingLeft) {
     char.moveLeft();
   }
@@ -68,8 +69,9 @@ function gameLoop() {
   }
   if (isJumping) {
     char.jump();
+    isJumping = false;
   }
-  console.log(char.status);
+  char.applyGravity();
   renderCharInfo();
   checkFalling();
   requestAnimationFrame(gameLoop);
@@ -84,18 +86,21 @@ function checkFalling() {
   const centerX = rect.left + rect.width / 2;
   const centerY = rect.top + rect.height / 2;
   const elementBelow = document.elementFromPoint(centerX, centerY + 51);
+  if (centerY > (levelHeight + 200)) {
+    char.killCharacter();
+  }
   if (!elementBelow) {
-    console.log('падаем');
+    char.onGround = false;
     console.log('Элемент под персонажем не найден.');
     return;
   }
   const belowAttribute = elementBelow.getAttribute('data-type');
   if (belowAttribute === 'ground' || belowAttribute === 'platform') {
-    console.log('не падаем');
-    char.canJump = 2;
+    char.onGround = true;
+    char.resetJump();
     return;
   }
-  console.log('падаем');
+  char.onGround = false;
 }
 function playerTakesDamage() {
   char.takeDamage();
